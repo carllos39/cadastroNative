@@ -24,6 +24,7 @@ class EnderecoDao
             ':cliente_id' => $clienteId
 
         ]);
+        return true;
     }
     public function update(Endereco $endereco)
     {
@@ -39,6 +40,7 @@ class EnderecoDao
             ':cliente_id' => $clienteId
 
         ]);
+         return true;
     }
     public function excluir($id)
     {

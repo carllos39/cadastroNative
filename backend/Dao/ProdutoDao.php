@@ -19,6 +19,7 @@ class ProdutoDao{
             ':data_validade' => $produto->getData_validade(),
             ':cliente_id' => $clienteId
         ]);
+        return true;
     }
       public function update(Produto $produto){
         $sql="UPDATE produto SET nome=:nome,preco=:preco,data_validade=:data_validade,cliente_id=:cliente_id WHERE id=:id";
@@ -31,6 +32,7 @@ class ProdutoDao{
             ':data_validade' => $produto->getData_validade(),
             ':cliente_id' => $clienteId
         ]);
+         return true;
     }
         public function excluir($id){
         $sql="DELETE FROM produto  WHERE id=:id";

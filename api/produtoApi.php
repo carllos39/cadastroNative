@@ -65,13 +65,14 @@ switch ($action) {
                 $cliente
             );
             if($produtoDao->create($produto)){
-           http_response_code(200);
-           echo json_encode([
-            'success' => true,
-            'message' => 'Produto cadastrado com sucesso!'
-            
-]);
+  http_response_code(200);
+                echo json_encode([
+                    'success'=>true,
+                    'message'=>"Produto cadasrado com sucesso!",
+                    "produto"=>$produto
+                ]);
             }else{
+        http_response_code(400);
            echo json_encode([
          'success' => false,
          'error' => 'Produto não cadastrado!'
