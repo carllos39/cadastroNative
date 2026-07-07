@@ -1,4 +1,5 @@
 <?php 
+session_start();
 header("Content-type:application/json");
 header("Access-Control-Allow-Origin:*");
 header("Access-Control-Allow-Methods:GET,POST,PUT,DELETE,OPTION");
@@ -10,6 +11,9 @@ if($_SERVER['REQUEST_METHOD']==='OPTIONS'){
 }
 require_once __DIR__."/../backend/Dao/ClienteDao.php";
 require_once __DIR__."/../backend/Model/Cliente.php";
+require_once __DIR__."/../backend/Core/Sessao.php";
+
+
 
 $clienteDao =new ClienteDao();
 $action = $_GET['action'] ?? null;
@@ -17,18 +21,21 @@ $id = $_GET['id'] ?? null;
 $inputBody = json_decode(file_get_contents('php://input'),true);
 switch($action){
     case 'logar':
-        if(isset($_POST['email']) && isset($_POST['senha'])){
+        if(isset($_POST['email']) && isset($_POST['senha'])&& isset($_POST['tipo'])){
         $email = trim($_POST['email']);
         $senha = trim($_POST['senha']);
-        $cliente = $clienteDao->getByEmail($email);
+         $tipo = trim($_POST['tipo']);
+        $cliente = $clienteDao->getByEmail($email,$tipo);
         if($cliente){
             if(password_verify($senha,$cliente->getSenha())){
+            login($cliente->getId(),$email,$tipo);
                 http_response_code(200);
                 echo json_encode([
                     'success'=>true,
                     'message'=>"Login realizado com sucesso!",
                     "cliente"=>$cliente
                 ]);
+               
             }else{
                 http_response_code(404);
                 echo json_encode(["error"=>"Cliente não encontrado!"]);
@@ -66,7 +73,8 @@ switch($action){
         $cliente =new Cliente(null,
                               $inputBody['nome'],
                               $inputBody['email'],
-             password_hash( $inputBody['senha'],PASSWORD_DEFAULT));
+             password_hash( $inputBody['senha'],PASSWORD_DEFAULT),
+                            $inputBody['tipo']);
            if($clienteDao->create($cliente)){
                http_response_code(200);
                 echo json_encode([
@@ -93,7 +101,8 @@ switch($action){
         $cliente =new Cliente($id,
                               $inputBody['nome'],
                               $inputBody['email'],
-                              $inputBody['senha']);
+                              $inputBody['senha'],
+                              $inputBody['tipo']);
            if($clienteDao->update($cliente)){
             http_response_code(200);
             echo json_encode(['sucess'=>'Cliente alterado com sucesso!']);

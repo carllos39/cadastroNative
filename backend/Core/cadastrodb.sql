@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 17/06/2026 às 17:29
+-- Tempo de geração: 29/06/2026 às 23:34
 -- Versão do servidor: 10.4.32-MariaDB
 -- Versão do PHP: 8.0.30
 
@@ -31,17 +31,16 @@ CREATE TABLE `cliente` (
   `id` int(11) NOT NULL,
   `nome` varchar(45) NOT NULL,
   `email` varchar(45) NOT NULL,
-  `senha` varchar(150) NOT NULL
+  `senha` varchar(150) NOT NULL,
+  `tipo` enum('cliente','admin') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Despejando dados para a tabela `cliente`
 --
 
-INSERT INTO `cliente` (`id`, `nome`, `email`, `senha`) VALUES
-(1, 'Carlos Alexandre', 'carllos3939@gmail.com', '$2y$10$yVAy/eH7kPCABCOck26nJOWAXZgth40OYl31vUnPnKlk7wdFh68tu'),
-(2, 'Natalia Cardoso', 'naty@gmail.com', '$2y$10$2N3BYzBCwu49jssJjGA3feJREYfjaVw8dDy3YgGRnHp.de4hgudX.'),
-(3, 'Tiago Cardoso', 'tiago@gmail.com', '$2y$10$wTr.YZYjXuAkxJUXXjlFTu4fC3Nqj3zv79hMnXTr50XUAOfIdJ/Bm');
+INSERT INTO `cliente` (`id`, `nome`, `email`, `senha`, `tipo`) VALUES
+(1, 'Carlos Alexandre', 'carllos3939@gmail.com', '$2y$10$neGqUNKFnx3PporoqgJlqe276SCQG3JggTbQXMFgq7D0Xqm2QSKGu', 'admin');
 
 -- --------------------------------------------------------
 
@@ -57,6 +56,15 @@ CREATE TABLE `endereco` (
   `estado` varchar(20) NOT NULL,
   `cliente_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Despejando dados para a tabela `endereco`
+--
+
+INSERT INTO `endereco` (`id`, `logradouro`, `bairro`, `cidade`, `estado`, `cliente_id`) VALUES
+(2, 'Rua Francisca Félix da Silva', 'Parque Monte Verde', 'Franco da Rocha', 'SP', 3),
+(3, 'Rua Francisca Félix da Silva', 'Parque Monte Verde', 'Franco da Rocha', 'SP', 2),
+(4, 'Rua José Seixas Vieira', 'Vila Lanfranchi', 'Franco da Rocha', 'SP', 1);
 
 -- --------------------------------------------------------
 
@@ -84,7 +92,12 @@ INSERT INTO `produto` (`id`, `nome`, `preco`, `data_validade`, `cliente_id`) VAL
 (7, 'uva', 12.00, '2026-06-20', 3),
 (8, 'morango', 12.00, '2026-06-20', 3),
 (9, 'laranja', 6.00, '2026-06-22', 1),
-(10, 'caqui', 10.00, '2026-06-24', 1);
+(10, 'caqui', 10.00, '2026-06-24', 1),
+(11, 'mexerica', 6.50, '2026-06-28', 2),
+(12, 'pessego', 11.00, '2026-07-03', 1),
+(13, 'figo', 8.00, '2026-07-05', 1),
+(14, 'pera', 9.00, '2026-07-10', 1),
+(15, 'beringela', 8.50, '2026-07-07', 1);
 
 --
 -- Índices para tabelas despejadas
@@ -118,19 +131,19 @@ ALTER TABLE `produto`
 -- AUTO_INCREMENT de tabela `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de tabela `endereco`
 --
 ALTER TABLE `endereco`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de tabela `produto`
 --
 ALTER TABLE `produto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Restrições para tabelas despejadas

@@ -2,6 +2,14 @@
 require_once __DIR__."/../Core/Conexao.php";
 require_once __DIR__."/../Model/Produto.php";
 require_once __DIR__."/../Model/Cliente.php";
+require_once __DIR__."/../Dao/ClienteDao.php";
+require_once __DIR__."/../Core/Sessao.php";
+
+$idCliente = $_SESSION['id'];
+$tipo = $_SESSION['tipo'];
+
+
+
 
 class ProdutoDao{
     private $bd;
@@ -41,14 +49,26 @@ class ProdutoDao{
             ':id' => $id    
         ]);
     }
-    public function getAll(){
+    public function getAll($idCliente,$tipo){
+        if($tipo==='admin'){
         $sql= "SELECT produto.*,
         cliente.id AS cliente_id,
         cliente.nome AS cliente_nome,
         cliente.email AS cliente_email,
-        cliente.senha AS cliente_senha
+        cliente.senha AS cliente_senha,
+          cliente.tipo AS cliente_tipo
         FROM produto JOIN cliente ON produto.cliente_id = cliente.id ";
-        $stmt =$this->bd->query($sql);
+         }else{
+        $sql= "SELECT produto.*,
+        cliente.id AS cliente_id,
+        cliente.nome AS cliente_nome,
+        cliente.email AS cliente_email,
+        cliente.senha AS cliente_senha,
+          cliente.tipo AS cliente_tipo
+        FROM produto JOIN cliente ON produto.cliente_id = cliente.id WHERE cliente.id = :idCliente";
+        $stmt =$this->bd->prepare($sql);
+        $stmt->bindValue(':idCliente',$idCliente,PDO::PARAM_INT);
+        $stmt->execute();
         $produtos=[];
         while($row =$stmt->fetch(PDO::FETCH_ASSOC)){
     $clienteId = new Cliente(
@@ -56,6 +76,7 @@ class ProdutoDao{
         $row['cliente_nome'],
         $row['cliente_email'],
         $row['cliente_senha'],
+        $row['cliente_tipo']
     );
      $produtos[] = new Produto(
         $row['id'],
@@ -66,13 +87,17 @@ class ProdutoDao{
      );
         }
         return $produtos;
+ 
     }
+    }
+
         public function getById($id):Produto{
         $sql= "SELECT produto.*,
         cliente.id AS cliente_id,
         cliente.nome AS cliente_nome,
         cliente.email AS cliente_email,
-        cliente.senha AS cliente_senha
+        cliente.senha AS cliente_senha,
+          cliente.tipo AS cliente_tipo
         FROM produto JOIN cliente ON produto.cliente_id = cliente.id WHERE produto.id=:id ";
         $stmt =$this->bd->prepare($sql);
         $stmt->execute([':id'=>$id]);
@@ -81,7 +106,8 @@ class ProdutoDao{
         $row['cliente_id'],
         $row['cliente_nome'],
         $row['cliente_email'],
-        $row['cliente_senha']
+        $row['cliente_senha'],
+          $row['cliente_tipo']
     );
      return $row ? new Produto(
         $row['id'],
@@ -91,6 +117,8 @@ class ProdutoDao{
         $clienteId
      ):null;
         }
+
+
         
     }
 

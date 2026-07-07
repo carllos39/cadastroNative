@@ -1,4 +1,5 @@
 <?php
+session_start();
 header('Contente-Type:Application/json');
 header('Access-Control-Allow-Origin:*');
 header('Access-Control-Allow-Methods:GET,POST,PUT,DELETE,OPTIONS');
@@ -11,6 +12,8 @@ if($_SERVER['REQUEST_METHOD']==='OPTIONS'){
 require_once __DIR__."/../backend/Dao/EnderecoDao.php";
 require_once __DIR__."/../backend/Dao/ClienteDao.php";
 require_once __DIR__."/../backend/Model/Endereco.php";
+require_once __DIR__."/../backend/Core/Sessao.php";
+
 
 $enderecoDao =new EnderecoDao();
 
@@ -20,7 +23,7 @@ $inputBody=json_decode(file_get_contents('php://input'),true);
 
 switch($action){
     case 'listar':
-        echo json_encode($enderecoDao->getAll());
+        echo json_encode($enderecoDao->getAll($idCliente,$tipo));
         break;
     case 'buscar':
         if($id){

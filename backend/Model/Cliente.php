@@ -5,13 +5,15 @@ class Cliente implements JsonSerializable
     private String $nome;
     private String $email;
     private String $senha;
+    private String $tipo;
 
-    public function __construct(?int $id,string $nome,string $email, String $senha)
+    public function __construct(?int $id,string $nome,string $email, String $senha,$tipo)
     {
         $this->id = $id;
         $this->nome = $nome;
         $this->email = $email;
         $this->senha = $senha;
+        $this->tipo = $tipo;
     }
 
     public function getId()
@@ -30,6 +32,10 @@ class Cliente implements JsonSerializable
     {
         return $this->senha;
     }
+       public function getTipo()
+    {
+        return $this->tipo;
+    }
 
 
     public function jsonSerialize(): mixed
@@ -39,6 +45,7 @@ class Cliente implements JsonSerializable
             'nome' => $this->nome,
             'email' => $this->email,
             'senha' => $this->senha,
+            'tipo'=>$this->tipo
         ];
     }
 }

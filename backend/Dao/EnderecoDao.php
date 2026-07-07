@@ -2,6 +2,10 @@
 require_once __DIR__ . "/../Core/Conexao.php";
 require_once __DIR__ . "/../Model/Endereco.php";
 require_once __DIR__."/../Model/Cliente.php";
+require_once __DIR__ . "/../Core/Sessao.php";
+
+$idCliente = $_SESSION['id'];
+$tipo = $_SESSION['tipo'];
 
 class EnderecoDao
 {
@@ -48,22 +52,36 @@ class EnderecoDao
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id' => $id]);
     }
-    public function getAll()
+    public function getAll($idCliente,$tipo)
     {
+        if($tipo==='admim'){
         $sql = "SELECT endereco.*,
         cliente.id AS cliente_id,
         cliente.nome AS cliente_nome,
         cliente.email AS cliente_email,
-        cliente.senha AS cliente_senha
+        cliente.senha AS cliente_senha,
+        cliente.tipo AS cliente_tipo
         FROM endereco JOIN cliente ON endereco.cliente_id = cliente.id ";
-        $stmt = $this->bd->query($sql);
+        }else{
+             $sql = "SELECT endereco.*,
+        cliente.id AS cliente_id,
+        cliente.nome AS cliente_nome,
+        cliente.email AS cliente_email,
+        cliente.senha AS cliente_senha,
+        cliente.tipo AS cliente_tipo
+        FROM endereco JOIN cliente ON endereco.cliente_id = cliente.id WHERE cliente.id=:idClinte";   
+        }
+        $stmt = $this->bd->prepare($sql);
+        $stmt->bindParam(':idCliente',$idCliente,PDO::PARAM_INT);
+        $stmt->execute();
         $enderecos = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $clienteId = new Cliente(
                 $row['cliente_id'],
                 $row['cliente_nome'],
                 $row['cliente_email'],
-                $row['cliente_senha']
+                $row['cliente_senha'],
+                  $row['cliente_tipo']
             );
             $enderecos[] = new Endereco(
                 $row['id'],
@@ -82,7 +100,8 @@ class EnderecoDao
         cliente.id AS cliente_id,
         cliente.nome AS cliente_nome,
         cliente.email AS cliente_email,
-        cliente.senha AS cliente_senha
+        cliente.senha AS cliente_senha,
+        cliente.tipo AS cliente_tipo
         FROM endereco JOIN cliente ON endereco.cliente_id = cliente.id WHERE endereco.id =:id ";
         $stmt = $this->bd->prepare($sql);
         $stmt->execute([':id'=>$id]);
@@ -91,7 +110,8 @@ class EnderecoDao
                 $row['cliente_id'],
                 $row['cliente_nome'],
                 $row['cliente_email'],
-                $row['cliente_senha']
+                $row['cliente_senha'],
+                $row['cliente_tipo']
             );
         return $row ? new Endereco(
                 $row['id'],

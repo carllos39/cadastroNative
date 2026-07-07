@@ -1,4 +1,5 @@
 <?php
+session_start();
 header("Content-Type:application/json");
 header("Access-Control-Allow-Origin:*");
 header("Access-Control-Allow-Methods:GET,POST,PUT,DELETE,OPTIONS");
@@ -12,6 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require_once __DIR__ . "/../backend/Dao/ProdutoDao.php";
 require_once __DIR__ . "/../backend/Dao/ClienteDao.php";
 require_once __DIR__ . "/../backend/Model/Produto.php";
+require_once __DIR__ . "/../backend/Core/Sessao.php";
+verificarTipo();
+
+
+
+
 
 $produtoDao = new ProdutoDao();
 
@@ -20,7 +27,7 @@ $id = $_GET['id'] ?? null;
 $inputBody = json_decode(file_get_contents('php://input'),true);
 switch ($action) {
     case 'listar':
-        echo json_encode($produtoDao->getAll());
+        echo json_encode($produtoDao->getAll($idCliente,$tipo));
         break;
     case 'buscar':
         if ($id) {
