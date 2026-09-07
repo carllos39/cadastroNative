@@ -1,5 +1,4 @@
 
-// excluirProduto.js
 
 import { Alert } from "react-native";
 import { inAxios } from "../config_axios";
@@ -7,7 +6,7 @@ import { inAxios } from "../config_axios";
 const excluirProduto = async (id, carregarProdutos) => {
     try {
         await inAxios.delete(
-            `/produtoApi.php?action=excluir&id=${id}`
+            `produtoApi.php?action=excluir&id=${id}`
         );
 
         Alert.alert(

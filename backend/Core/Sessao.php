@@ -1,39 +1,35 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
+if(!isset($_SESSION)){
+session_start();
 }
-
-function verificarAcesso()
-{
-    if (!isset($_SESSION['id'])) {
+function verificarAcesso(){
+    if(!isset($_SESSION['id'])){
         session_destroy();
-
-        header("Location: ../../login.php");
-        exit;
+        header("location:index.php?acesso_negado");
     }
 }
 
-function login($id, $email, $tipo)
-{
+function login($id,$email,$tipo){
     $_SESSION['id'] = $id;
     $_SESSION['email'] = $email;
     $_SESSION['tipo'] = $tipo;
 }
-
-function logout()
-{
-    session_unset();
-    session_destroy();
+function logout(){
+        session_destroy();
+        header("location:index.php?sair");
+        exit;  
+}
+function verificarTipo(){
+    if($_SESSION['tipo'] !='admin'){
+     header("location:../../nao-autorizado.php");
+     exit;
 }
 
-function verificarTipo()
-{
-    if (
-        !isset($_SESSION['tipo']) ||
-        $_SESSION['tipo'] !== 'admin'
-    ) {
-        header("Location: ../../nao_autorizado.php");
-        exit;
-    }
+}
+function verificarTipos(){
+    if($_SESSION['tipos'] !='admin' || 'recepcionista'){
+     header("location:../../nao-autorizado.php");
+     exit;
+}
 }
 ?>

@@ -14,6 +14,10 @@ require_once __DIR__."/../backend/Dao/ClienteDao.php";
 require_once __DIR__."/../backend/Model/Endereco.php";
 require_once __DIR__."/../backend/Core/Sessao.php";
 
+$idCliente = $_SESSION['id']?? null;
+$tipo = $_SESSION['tipo'] ?? null;
+
+
 
 $enderecoDao =new EnderecoDao();
 
@@ -27,7 +31,7 @@ switch($action){
         break;
     case 'buscar':
         if($id){
-            $endereco=$enderecoDao->getById($id);
+            $endereco=$enderecoDao->getById($id,$idCliente,$tipo);
             if($endereco){
                 http_response_code(200);
             echo json_encode($endereco);
@@ -133,7 +137,7 @@ switch($action){
             $inputBody['estado'],
             $cliente
           );
-          if($enderecoDao->update($endereco)){
+          if($enderecoDao->update($endereco,$idCliente,$tipo)){
             http_response_code(200);
             echo json_encode(['success'=>true,
                               'message'=>'Endereço editado com sucesso!' ]);
@@ -154,7 +158,7 @@ switch($action){
             break;
             case 'excluir':
     if($id && $_SERVER['REQUEST_METHOD']==='DELETE'){
-       if($enderecoDao->excluir($id)){
+       if($enderecoDao->excluir($id,$idCliente,$tipo)){
             http_response_code(200);
             echo json_encode(['success'=>true,
                               'message'=>'Endereço excluido com sucesso!' ]);

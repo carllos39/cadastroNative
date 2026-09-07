@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__."/../Core/Conexao.php";
 require_once __DIR__."/../Model/Cliente.php";
+require_once __DIR__."/../Core/Sessao.php";
+
 
 
 class ClienteDao{

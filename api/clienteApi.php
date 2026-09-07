@@ -16,6 +16,7 @@ require_once __DIR__."/../backend/Core/Sessao.php";
 
 
 $clienteDao =new ClienteDao();
+
 $action = $_GET['action'] ?? null;
 $id = $_GET['id'] ?? null;
 $inputBody = json_decode(file_get_contents('php://input'),true);

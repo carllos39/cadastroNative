@@ -14,7 +14,9 @@ require_once __DIR__ . "/../backend/Dao/ProdutoDao.php";
 require_once __DIR__ . "/../backend/Dao/ClienteDao.php";
 require_once __DIR__ . "/../backend/Model/Produto.php";
 require_once __DIR__ . "/../backend/Core/Sessao.php";
-verificarTipo();
+
+$idCliente = $_SESSION['id']?? null;
+$tipo = $_SESSION['tipo'] ?? null;
 
 
 
@@ -28,10 +30,11 @@ $inputBody = json_decode(file_get_contents('php://input'),true);
 switch ($action) {
     case 'listar':
         echo json_encode($produtoDao->getAll($idCliente,$tipo));
+     
         break;
     case 'buscar':
         if ($id) {
-            $produto = $produtoDao->getById($id);
+            $produto = $produtoDao->getById($id,$idCliente,$tipo);
             if ($produto) {
                 http_response_code(200);
                 echo json_encode($produto);
@@ -134,7 +137,7 @@ switch ($action) {
             $cliente
         );
 
-        if ($produtoDao->update($produto)) {
+        if ($produtoDao->update($produto,$idCliente,$tipo)) {
 
             http_response_code(200);
             echo json_encode([
@@ -163,7 +166,7 @@ switch ($action) {
     break;   
     case 'excluir':
         if ($id && $_SERVER['REQUEST_METHOD'] === 'DELETE') {
-            if ($produtoDao->excluir($id)) {
+            if ($produtoDao->excluir($id,$idCliente,$tipo)) {
                    http_response_code(200);
                 echo json_encode([
                   'success' => true,
